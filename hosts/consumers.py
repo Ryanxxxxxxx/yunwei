@@ -21,6 +21,7 @@ class ChatConsumer1(WebsocketConsumer):
         )
 
         self.accept()
+
         print('-----------------------------')
         # text_data_json = json.loads(text_data)
         # message_web = text_data_json['message']
