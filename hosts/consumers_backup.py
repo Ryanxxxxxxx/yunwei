@@ -46,6 +46,7 @@ class ChatConsumer(WebsocketConsumer):
         )
 
         self.accept()
+
         # 发送数据给前端 hostowner_id host_name hostip port username system_ver ssh_status mac_address res_freememory res_allmemory
         while True:
 
@@ -71,12 +72,8 @@ class ChatConsumer(WebsocketConsumer):
                                "system_ver": system_ver, "ssh_status": ssh_status,
                                "mac_address": mac_address, "res_freememory": '未获取', "res_allmemory": "未获取"}
                     # 扫描主机硬件信息
-                    import yaml
-                    from scanhosts.util.nmap_all_server import snmp_begin
-                    s_conf = yaml.load(open('conf/scanhosts.yaml'))
-                    s_key = host.password
-                    s_cmds = s_conf['hostsinfo']['syscmd_list']
-                    snmp_begin(hostowner_id, hostip, port, username, s_key, s_cmds)
+                    from utils.scan_hosts import scan_hosts
+                    scan_hosts()
 
                     # 筛选可以远程连接的主机的数据
                     if data_key == "success":
@@ -103,26 +100,21 @@ class ChatConsumer(WebsocketConsumer):
                     else:
                         msg_objects_list.append(message)
                         print('--------未登录主机状态获取成功------------')
+                    # 控制扫描时间
+                    asyncio.sleep(1)
 
+            # Send message to room group
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': msg_objects_list
+                }
+            )
 
-        # 控制扫描时间
-        # time.sleep(0.1)
-            self.send(text_data=json.dumps({
-                'message': msg_objects_list
-            }))
-            print('----------执行完一次扫描------------')
-            asyncio.sleep(0.1)
-
-
-        # text_data_json = json.loads(text_data)
-        # message_web = text_data_json['message']
-        # print(message_web)
-        # for i in range(101):
-        #     l = ['老王', '老李', '机器猫', '钢铁侠']
-        #     message = random.choice(l) + str(i)
-
-
-
+            # self.send(text_data=json.dumps({
+            #     'message': msg_objects_list
+            # }))
 
     def disconnect(self, close_code):
         # Leave room group
@@ -131,6 +123,25 @@ class ChatConsumer(WebsocketConsumer):
             self.channel_name
         )
 
+    # # Receive message from WebSocket
+    # def receive(self, text_data):
+    #     print('-----------------------------')
+    #     text_data_json = json.loads(text_data)
+    #     message_web = text_data_json['message']
+    #     print(message_web)
+    #     for i in range(1000):
+    #         l=['老王','老李','机器猫','钢铁侠']
+    #         message=random.choice(l)+str(i)
+    #
+    #         # Send message to room group
+    #         async_to_sync(self.channel_layer.group_send)(
+    #             self.room_group_name,
+    #             {
+    #                 'type': 'chat_message',
+    #                 'message': message
+    #             }
+    #         )
+    #         asyncio.sleep(0.1)
 
     # Receive message from room group
     def chat_message(self, event):
@@ -143,7 +154,7 @@ class ChatConsumer(WebsocketConsumer):
 
         }
         ))
-
+        asyncio.sleep(0.01)
 
 
 # chat/consumers.py
@@ -223,12 +234,8 @@ class ChatConsumer1(WebsocketConsumer):
                                "system_ver": system_ver, "ssh_status": ssh_status,
                                "mac_address": mac_address, "res_freememory": '未获取', "res_allmemory": "未获取"}
                     #扫描主机硬件信息
-                    import yaml
-                    from scanhosts.util.nmap_all_server import snmp_begin
-                    s_conf = yaml.load(open('conf/scanhosts.yaml'))
-                    s_key = host.password
-                    s_cmds = s_conf['hostsinfo']['syscmd_list']
-                    snmp_begin(hostowner_id, hostip, port, username, s_key, s_cmds)
+                    from utils.scan_hosts import scan_hosts
+                    scan_hosts()
 
                     #筛选可以远程连接的主机的数据
                     if data_key == "success":
@@ -250,21 +257,20 @@ class ChatConsumer1(WebsocketConsumer):
                         finally:
                             msg_objects_list.append(message)
                             # Send message to web
-                            print('--------登录主机状态获取成功------------')
 
+                            self.send(text_data=json.dumps({
+                                'message': msg_objects_list
+                            }))
+                            print('--------登录主机状态获取成功------------')
                     #筛选可以远程连接的主机的数据
                     else:
                         msg_objects_list.append(message)
-
+                        self.send(text_data=json.dumps({
+                            'message': msg_objects_list
+                        }))
                         print('--------未登录主机状态获取成功------------')
-
-            #发送消息
-            self.send(text_data=json.dumps({
-                'message': msg_objects_list
-            }))
-            print('--------完成一次扫描-----------')
-            #控制扫描时间
-            time.sleep(1)
+                    #控制扫描时间
+                    time.sleep(0.1)
 
     def disconnect(self, close_code):
         """

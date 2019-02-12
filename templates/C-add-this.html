@@ -130,8 +130,8 @@
 							<div class="index-main-top-signout">
 								{% if request.user.id %}
                                     <span>欢迎您：{{ request.user.username }}</span>
-                                    <div style="display: none">
-                                        <a href="{% url 'user:login' %}"><span class="fa">&#xf007;&emsp;</span >注销</a>
+                                    <div style="float: right">
+                                        <a href="{% url 'user:logout' %}"><span>注销</span ></a>
                                     </div>
                                 {% else %}
                                      <a href="{% url 'user:login' %}"><span class="fa">&#xf007;&emsp;</span>登陆</a>
@@ -169,7 +169,7 @@
 														<div class=" col-md-10 form-for" id="us-app">
 																<input type="checkbox" name="install" class="install" value="nginx" /><div class="sp-na">nginx</div>
 																<input type="checkbox" name="install" class="install" value="php" /><div class="sp-na">php</div>
-																<input type="checkbox" name="install" class="install" value="newans" /><div class="sp-na">newans</div>
+																<input type="checkbox" name="install" class="install" value="ping" /><div class="sp-na">ping</div>
 														</div>
 													</div>
 													 <!--./动态加载部署软件/部署文件 ->-->

@@ -3,12 +3,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.hashers import make_password, check_password
-from rest_framework.mixins import CreateModelMixin,ListModelMixin
+from rest_framework.mixins import CreateModelMixin,ListModelMixin,DestroyModelMixin
 from rest_framework.viewsets import GenericViewSet
 from rest_framework import status
 from users.serializers import UserTokenSerializer
 from rest_framework_jwt.settings import api_settings
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from rest_framework.permissions import AllowAny
 
 
@@ -25,7 +25,7 @@ class UserLogin(APIView):
         return Response(token)
 
 
-class UserTokenViewSet(CreateModelMixin, GenericViewSet):
+class UserTokenViewSet(CreateModelMixin, DestroyModelMixin, GenericViewSet):
 
     """
     登录
@@ -48,6 +48,9 @@ class UserTokenViewSet(CreateModelMixin, GenericViewSet):
         else:
             return JsonResponse({'status':False})
 
+    def destroy(self, request, *args, **kwargs):
+        logout(request)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
         #
         # try:
@@ -127,6 +130,16 @@ def UserloginViewSite(request):
     '''
 
     return render(request, "user-login.html")
+
+def UserlogoutViewSite(request):
+    '''
+    用户注销
+    :param request:
+    :return:
+    '''
+    logout(request)
+
+    return render(request, "user-index.html")
 
 
 def UsermakeViewSite(request):

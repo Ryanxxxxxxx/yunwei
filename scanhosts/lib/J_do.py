@@ -17,6 +17,12 @@ class J_ssh_do(object):
         :return:
         '''
         try:
+            # transport = paramiko.Transport((login_info[0], login_info[1]))
+            # print(transport.banner_timeout)
+            # transport.banner_timeout = 30
+            # print(transport.banner_timeout)
+
+
             ssh = paramiko.SSHClient()
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             if len(login_info[3]) == 32:

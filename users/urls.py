@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^', include(router.urls)),
 
     url(r'^userlogin/$', UserloginViewSite, name='login'),
+    url(r'^userlogout/$', UserlogoutViewSite, name='logout'),
     url(r'^usermake/$', UsermakeViewSite, name='nake'),
     url(r'^addapp/', CaddappViewSite, name='addapp'),
     url(r'^putermage', CmageViewSite, name='putermage'),

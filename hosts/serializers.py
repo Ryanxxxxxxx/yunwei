@@ -15,7 +15,7 @@ class HostReadSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Host
-        fields = ('hostip', 'port','username','password','hostowner')
+        fields = ('id','hostip', 'port','username','password','hostowner')
 
 
 class HostUpdateSerializers(serializers.ModelSerializer):

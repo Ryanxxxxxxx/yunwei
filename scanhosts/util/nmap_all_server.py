@@ -81,8 +81,8 @@ class NmapDev(object):
             s_port, s_key, s_user, system_info, sys_hostname, sys_mac, sys_sn)
         elif res["status"] == "failed" and re.search(r"reading SSH protocol banner", res["res"]):
             print("2222222222222")
-            print("IP:%s Connection closed by remote host,Sleep 60 (s).................. " % s_net, res)
-            time.sleep(60)
+            print("IP:%s Connection closed by remote host,Sleep 0.1 (s).................. " % s_net, res)
+            time.sleep(0.1)
         else:
             if s_net not in self.not_login_lst.keys() and s_net not in self.can_login_lst.keys():
                 print("33333333333")
