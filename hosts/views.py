@@ -181,7 +181,7 @@ def play_book(request):
     res = dict()
 
     for insta in installs:
-        playbook_path = '../yunwei/taskdo/utils/base/install_' + insta
+        playbook_path = '../pycharm_project_205/taskdo/utils/base/install_' + insta
 
         rbt.run_playbook(playbook_path=playbook_path)
         data = rbt.get_playbook_result()

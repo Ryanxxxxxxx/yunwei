@@ -232,6 +232,7 @@
                              <label style="display: none">${data[i].id}</label>
                              <label style="display: none">${data[i].username}</label>
                              <label style="display: none">${data[i].password}</label>
+                             <label style="display: none">${data[i].port}</label>
                              </td>
                              <td> ${data[i].username}</td>
                              <td><span> <a href="{% url 'user:putermage' %}">详细信息</a></span></td>
@@ -265,7 +266,7 @@
             var id=$("input[name='modify']:checked").next().text();
             var params = {
                 "hostip": $("#hostip").val(),
-                "port": 22,
+                "port": $("input[name='modify']:checked").next().next().next().next().text(),
                 "username": $("#hostname").val(),
                 "password": $("#host_id_pub").val(),
 
